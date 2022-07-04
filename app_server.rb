@@ -47,12 +47,14 @@ class AppServer < Sinatra::Base
   end
 
   get '/spend_by_category' do
+    param :user_name, String, required: true
     spends = spends_arr(params[:user_name], 'category')
     status 200
     { user_name: params[:user_name], spends: spends }.to_json
   end
 
   get '/spend_by_day' do
+    param :user_name, String, required: true
     spends = spends_arr(params[:user_name], 'created_at')
     status 200
     { user_name: params[:user_name], spends: spends.map{ |h| h.merge({ agg_field_value: h[:agg_field_value].strftime("%d %b %Y") }) } }.to_json
