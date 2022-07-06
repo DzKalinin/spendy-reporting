@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe UserStatsAggregator do
+describe UserSpendAggregator do
   let(:name) { 'test' }
   let!(:mocked_data) do
     [OpenStruct.new(fields: { 'user_name' => { string_value: name},

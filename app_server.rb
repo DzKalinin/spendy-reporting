@@ -27,7 +27,7 @@ class AppServer < Sinatra::Base
 
   get '/spend_by_day' do
     param :user_name, String, required: true
-    spends =user_spend_aggregator.agg_spend_by('created_at')
+    spends = user_spend_aggregator.agg_spend_by('created_at')
     puts spends.inspect
     status 200
     { user_name: params[:user_name], spends: spends }.to_json
@@ -41,6 +41,6 @@ class AppServer < Sinatra::Base
   private
 
   def user_spend_aggregator
-    @UserStatsAggregator ||= UserStatsAggregator.new(params[:user_name])
+    @UserStatsAggregator ||= UserSpendAggregator.new(params[:user_name])
   end
 end

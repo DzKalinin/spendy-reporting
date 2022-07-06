@@ -1,4 +1,4 @@
-class UserStatsAggregator
+class UserSpendAggregator
   ROUND_DIGITS = 2
 
   def initialize(user_name)
