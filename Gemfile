@@ -9,3 +9,7 @@ gem 'activesupport', '~> 7.0', '>= 7.0.3'
 group :development, :test do
   gem 'sinatra-reloader'
 end
+
+group :test do
+  gem 'rspec', '~> 3.11'
+end
