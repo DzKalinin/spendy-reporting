@@ -2,6 +2,7 @@ ENV['RACK_ENV'] ||= 'test'
 
 require './dependencies'
 require 'rspec'
+require 'timecop'
 
 Time.zone = ActiveSupport::TimeZone['Eastern Time (US & Canada)']
 Time.zone_default = ActiveSupport::TimeZone['Eastern Time (US & Canada)']

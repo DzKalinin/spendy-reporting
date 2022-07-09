@@ -106,6 +106,7 @@ GEM
     sinatra-reloader (1.0)
       sinatra-contrib
     tilt (2.0.10)
+    timecop (0.9.5)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
     unicorn (6.1.0)
@@ -122,6 +123,7 @@ DEPENDENCIES
   sinatra
   sinatra-param
   sinatra-reloader
+  timecop (~> 0.9.5)
   unicorn (~> 6.0)
 
 BUNDLED WITH

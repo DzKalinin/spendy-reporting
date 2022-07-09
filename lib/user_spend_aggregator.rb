@@ -6,19 +6,19 @@ class UserSpendAggregator
     @spend_total_rows = {}
   end
 
-  def agg_spend_by(field)
-    spend_per_agg_field = _agg_send_by(field)
+  def agg_spend_by(field, start_timestamp, end_timestamp)
+    spend_per_agg_field = _agg_send_by(field, start_timestamp, end_timestamp)
     with_total_spend_rows(spend_per_agg_field)
   end
 
   private
 
-  def _agg_send_by(field)
+  def _agg_send_by(field, start_timestamp, end_timestamp)
     agg_field_value = ->(fields_hash, field) do
       field == 'created_at' ? Time.at(fields_hash.dig(field, :integer_value)).to_date : fields_hash.dig(field, :string_value)
     end
 
-    spend_per_agg_field = user_data.each_with_object({}) do |doc, h|
+    spend_per_agg_field = user_data(start_timestamp, end_timestamp).each_with_object({}) do |doc, h|
       fields_hash = doc.fields
       field_value = agg_field_value.call(fields_hash, field)
       currency = fields_hash.dig('currency', :string_value)
@@ -42,7 +42,12 @@ class UserSpendAggregator
     spend_per_agg_field
   end
 
-  def user_data
-    @user_data ||= Firestore.col(Settings.app[:firestore_table_name]).where("user_name", "=", @user_name).get
+  def user_data(start_timestamp, end_timestamp)
+    puts "FIRESTORE QUERY PARAMS: user_name: '#{@user_name}', start_timestamp: #{start_timestamp}, end_timestamp: #{end_timestamp}"
+    Firestore.col(Settings.app[:firestore_table_name]).
+      where("user_name", "=", @user_name).
+      where("created_at", ">=", start_timestamp).
+      where("created_at", "<=", end_timestamp).
+      get
   end
 end

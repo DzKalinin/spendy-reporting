@@ -1,7 +1,9 @@
 require 'spec_helper'
 
 describe UserSpendAggregator do
-  let(:name) { 'test' }
+  let!(:name) { 'test' }
+  let!(:start_timestamp) { Time.zone.now.beginning_of_month.to_i }
+  let!(:end_timestamp) { Time.zone.now.end_of_day.to_i }
   let!(:mocked_data) do
     [OpenStruct.new(fields: { 'user_name' => { string_value: name},
                               'category' => { string_value: 'taxi'},
@@ -36,20 +38,20 @@ describe UserSpendAggregator do
   end
 
   it 'should return data by category with total row' do
-    expect(subject.agg_spend_by('category')).to eq([
-                                                     { agg_field_value: 'total usd', currency: 'usd', amount: 64.2 },
-                                                     { agg_field_value: 'total byn', currency: 'byn', amount: 153.5 },
-                                                     { agg_field_value: 'food', currency: 'byn', amount: 153.5 },
-                                                     { agg_field_value: 'food', currency: 'usd', amount: 46.5 },
-                                                     { agg_field_value: 'taxi', currency: 'usd', amount: 17.7 } ])
+    expect(subject.agg_spend_by('category', start_timestamp, end_timestamp)).to eq([
+                                                                                     { agg_field_value: 'total usd', currency: 'usd', amount: 64.2 },
+                                                                                     { agg_field_value: 'total byn', currency: 'byn', amount: 153.5 },
+                                                                                     { agg_field_value: 'food', currency: 'byn', amount: 153.5 },
+                                                                                     { agg_field_value: 'food', currency: 'usd', amount: 46.5 },
+                                                                                     { agg_field_value: 'taxi', currency: 'usd', amount: 17.7 } ])
   end
 
   it 'should return data by day with total row' do
-    expect(subject.agg_spend_by('created_at')).to eq([
-                                                     { agg_field_value: 'total usd', currency: 'usd', amount: 64.2 },
-                                                     { agg_field_value: 'total byn', currency: 'byn', amount: 153.5 },
-                                                     { agg_field_value: '01 Jul 2022', currency: 'byn', amount: 153.5 },
-                                                     { agg_field_value: '01 Jul 2022', currency: 'usd', amount: 17.7 },
-                                                     { agg_field_value: '02 Jul 2022', currency: 'usd', amount: 46.5 } ])
+    expect(subject.agg_spend_by('created_at', start_timestamp, end_timestamp)).to eq([
+                                                                                       { agg_field_value: 'total usd', currency: 'usd', amount: 64.2 },
+                                                                                       { agg_field_value: 'total byn', currency: 'byn', amount: 153.5 },
+                                                                                       { agg_field_value: '01 Jul 2022', currency: 'byn', amount: 153.5 },
+                                                                                       { agg_field_value: '01 Jul 2022', currency: 'usd', amount: 17.7 },
+                                                                                       { agg_field_value: '02 Jul 2022', currency: 'usd', amount: 46.5 } ])
   end
 end
