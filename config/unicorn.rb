@@ -4,8 +4,8 @@ rack_env = ENV['RACK_ENV'] || 'production'
 # Use at least one worker per core if you're on a dedicated server,
 # more will usually help for _short_ waits on databases/caches.
 APP_PATH = Pathname.new(File.expand_path(__FILE__)).parent.parent.to_s
-#set number of worker processes to EC2 compute units count
-worker_processes ENV.fetch("FACEBOOK_MANAGER_API_UNICORN_WORKERS") { rack_env == 'production' ? 5 : (rack_env == 'development' ? 1 : 3) }.to_i
+# set number of worker processes to EC2 compute units count
+worker_processes ENV.fetch('UNICORN_WORKERS') { rack_env == 'production' ? 5 : (rack_env == 'development' ? 1 : 3) }.to_i
 
 # Since Unicorn is never exposed to outside clients, it does not need to
 # run on the standard HTTP port (80), there is no reason to start Unicorn
@@ -45,7 +45,7 @@ pid 'pids/unicorn.pid'
 preload_app true
 
 before_exec do |server|
-  ENV['BUNDLE_GEMFILE'] = APP_PATH + "/Gemfile"
+  ENV['BUNDLE_GEMFILE'] = APP_PATH + '/Gemfile'
 end
 
 GC.respond_to?(:copy_on_write_friendly=) and
@@ -67,8 +67,8 @@ before_fork do |server, worker|
   # # when doing a transparent upgrade.  The last worker spawned
   # # will then kill off the old master process with a SIGQUIT.§
 
-  old_pid = "pids/unicorn.pid.oldbin"
-  if File.exists?(old_pid) && server.pid != old_pid
+  old_pid = 'pids/unicorn.pid.oldbin'
+  if File.exist?(old_pid) && server.pid != old_pid
     begin
       Process.kill('QUIT', File.read(old_pid).to_i)
     rescue Errno::ENOENT, Errno::ESRCH

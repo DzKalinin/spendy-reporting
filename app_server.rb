@@ -1,4 +1,4 @@
-require './app.rb'
+require './app'
 
 class AppServer < Sinatra::Base
   helpers Sinatra::Param
@@ -47,7 +47,7 @@ class AppServer < Sinatra::Base
   private
 
   def user_spend_aggregator
-    @UserStatsAggregator ||= UserSpendAggregator.new(params[:user_name])
+    @user_spend_aggregator ||= UserSpendAggregator.new(params[:user_name])
   end
 
   def start_timestamp(start_time_str)

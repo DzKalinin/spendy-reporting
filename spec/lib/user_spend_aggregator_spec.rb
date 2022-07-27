@@ -39,19 +39,19 @@ describe UserSpendAggregator do
 
   it 'should return data by category with total row' do
     expect(subject.agg_spend_by('category', start_timestamp, end_timestamp)).to eq([
-                                                                                     { agg_field_value: 'total usd', currency: 'usd', amount: 64.2 },
-                                                                                     { agg_field_value: 'total byn', currency: 'byn', amount: 153.5 },
-                                                                                     { agg_field_value: 'food', currency: 'byn', amount: 153.5 },
-                                                                                     { agg_field_value: 'food', currency: 'usd', amount: 46.5 },
-                                                                                     { agg_field_value: 'taxi', currency: 'usd', amount: 17.7 } ])
+                                                                                     { agg_field_value: 'total usd', currency: 'usd', amount: 64.2, expenses_count: 3 },
+                                                                                     { agg_field_value: 'total byn', currency: 'byn', amount: 153.5, expenses_count: 1 },
+                                                                                     { agg_field_value: 'food', currency: 'byn', amount: 153.5, expenses_count: 1 },
+                                                                                     { agg_field_value: 'food', currency: 'usd', amount: 46.5, expenses_count: 1 },
+                                                                                     { agg_field_value: 'taxi', currency: 'usd', amount: 17.7, expenses_count: 2 } ])
   end
 
   it 'should return data by day with total row' do
     expect(subject.agg_spend_by('created_at', start_timestamp, end_timestamp)).to eq([
-                                                                                       { agg_field_value: 'total usd', currency: 'usd', amount: 64.2 },
-                                                                                       { agg_field_value: 'total byn', currency: 'byn', amount: 153.5 },
-                                                                                       { agg_field_value: '01 Jul 2022', currency: 'byn', amount: 153.5 },
-                                                                                       { agg_field_value: '01 Jul 2022', currency: 'usd', amount: 17.7 },
-                                                                                       { agg_field_value: '02 Jul 2022', currency: 'usd', amount: 46.5 } ])
+                                                                                       { agg_field_value: 'total usd', currency: 'usd', amount: 64.2, expenses_count: 3 },
+                                                                                       { agg_field_value: 'total byn', currency: 'byn', amount: 153.5, expenses_count: 1 },
+                                                                                       { agg_field_value: '01 Jul 2022', currency: 'byn', amount: 153.5, expenses_count: 1 },
+                                                                                       { agg_field_value: '01 Jul 2022', currency: 'usd', amount: 17.7, expenses_count: 2 },
+                                                                                       { agg_field_value: '02 Jul 2022', currency: 'usd', amount: 46.5, expenses_count: 1 } ])
   end
 end

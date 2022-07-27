@@ -23,12 +23,14 @@ class UserSpendAggregator
       field_value = agg_field_value.call(fields_hash, field)
       currency = fields_hash.dig('currency', :string_value)
       key = "#{field_value}-#{currency}"
-      h[key] ||= { agg_field_value: field_value, currency: currency, amount: 0 }
+      h[key] ||= { agg_field_value: field_value, currency: currency, amount: 0, expenses_count: 0 }
       amount = fields_hash.dig('amount', :double_value)
       h[key][:amount] += amount
+      h[key][:expenses_count] += 1
 
-      @spend_total_rows[currency] ||= 0
-      @spend_total_rows[currency] += amount
+      @spend_total_rows[currency] ||= { amount: 0, expenses_count: 0 }
+      @spend_total_rows[currency][:amount] += amount
+      @spend_total_rows[currency][:expenses_count] += 1
     end.map { |_, v| v.merge({ amount: v[:amount].round(ROUND_DIGITS) }) }&.sort_by { |h| [h[:agg_field_value], h[:currency]] } || []
 
     spend_per_agg_field.map! { |h| h.merge({ agg_field_value: h[:agg_field_value].strftime("%d %b %Y")  }) } if field == 'created_at'
@@ -36,8 +38,11 @@ class UserSpendAggregator
   end
 
   def with_total_spend_rows(spend_per_agg_field)
-    @spend_total_rows.sort_by{|(k,v)| k }.to_h.each do |currency, amount|
-      spend_per_agg_field.unshift({ agg_field_value: "total #{currency}", currency: currency, amount: amount.round(ROUND_DIGITS)})
+    @spend_total_rows.sort_by{|(k,v)| k }.to_h.each do |currency, report_data_hash|
+      spend_per_agg_field.unshift({ agg_field_value: "total #{currency}",
+                                    currency: currency,
+                                    amount: report_data_hash[:amount].round(ROUND_DIGITS),
+                                    expenses_count: report_data_hash[:expenses_count] })
     end
     spend_per_agg_field
   end

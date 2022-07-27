@@ -8,6 +8,7 @@ gem 'activesupport', '~> 7.0', '>= 7.0.3'
 
 group :development, :test do
   gem 'sinatra-reloader'
+  gem 'rubocop', '~> 1.32'
 end
 
 group :test do

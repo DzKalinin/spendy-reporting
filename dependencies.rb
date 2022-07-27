@@ -9,4 +9,3 @@ require 'active_support/all'
 Dir["#{Dir.pwd}/lib/*.rb"].each { |f| require f }
 
 require 'sinatra/reloader' if Settings.development?
-

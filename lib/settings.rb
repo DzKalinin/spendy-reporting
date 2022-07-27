@@ -1,15 +1,17 @@
 class Settings
-  def self.app
-    @app ||= ::YAML.load_file('config/application.yml', aliases: true, symbolize_names: true)[env]
-  end
+  class << self
+    def app
+      @app ||= ::YAML.load_file('config/application.yml', aliases: true, symbolize_names: true)[env]
+    end
 
-  def self.development?
-    self.env == :development
-  end
+    def development?
+      env == :development
+    end
 
-  private
+    private
 
-  def self.env
-    @env ||= (ENV['RACK_ENV'] || 'development').to_sym
+    def env
+      @env ||= (ENV['RACK_ENV'] || 'development').to_sym
+    end
   end
 end
