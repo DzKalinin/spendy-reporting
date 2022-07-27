@@ -23,7 +23,7 @@ class AppServer < Sinatra::Base
     param :end_date, String, required: true
 
     spends = user_spend_aggregator.agg_spend_by('category', start_timestamp(params[:start_date]), end_timestamp(params[:end_date]))
-    puts "spend_by_category: #{spends.inspect}"
+    puts "#{params[:user_name]} - spend_by_category: #{spends.inspect}"
     status 200
     { user_name: params[:user_name], spends: spends }.to_json
   end
@@ -34,13 +34,13 @@ class AppServer < Sinatra::Base
     param :end_date, String, required: true
 
     spends = user_spend_aggregator.agg_spend_by('created_at', start_timestamp(params[:start_date]), end_timestamp(params[:end_date]))
-    puts "spend_by_day: #{spends.inspect}"
+    puts "#{params[:user_name]} - spend_by_day: #{spends.inspect}"
     status 200
     { user_name: params[:user_name], spends: spends }.to_json
   end
 
   error do
-    puts env['sinatra.error'].inspect
+    puts "#{params[:user_name]} - #{env['sinatra.error'].inspect}"
     { message: env['sinatra.error'].message }.to_json
   end
 
